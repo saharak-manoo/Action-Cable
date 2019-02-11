@@ -3,4 +3,5 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 App.room = App.cable.subscriptions.create "WebNotificationsChannel",
   received: (data) ->
-    $('#messages').append data['message']
+    $('#messages').append messagesTO(data)
+    $('#test').text data['messages']
