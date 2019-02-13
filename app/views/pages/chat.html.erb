@@ -80,11 +80,11 @@
         <div class="card-header msg_head">
           <div class="d-flex bd-highlight">
             <div class="img_cont">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img">
+              <img src="http://profilepicturesdp.com/wp-content/uploads/2018/07/sweet-girl-profile-pictures-9.jpg" class="rounded-circle user_img">
               <span class="online_icon"></span>
             </div>
             <div class="user_info">
-              <span>Chat with Maryam Naz</span>
+              <span>Chat with Dove</span>
               <p>1767 Messages</p>
             </div>
             <div class="video_cam">
@@ -103,16 +103,8 @@
           </div>
         </div>
         <div class="card-body msg_card_body">
-          <div class="d-flex justify-content-start mb-4">
-            <div class="img_cont_msg">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_msg">
-            </div>
-            <div class="msg_cotainer">
-              Hi, how are you samim?
-              <span class="msg_time">8:40 AM, Today</span>
-            </div>
-          </div>
-          <div id="messages"></div>
+          <div id="messagesFrom"></div>
+          <div id="typeMessages"></div>
         </div>
         <div class="card-footer">
           <div class="input-group">
@@ -146,17 +138,32 @@
   function sendMsg() {
     if ($('.type_msg').val() != '') {
       $.ajax({
-        url: '/',
+        url: '/pages',
         type: 'get',
-        dataType: "json",
+        dataType: 'json',
         data: {
-          messages: $('.type_msg').val()
-        },success: function () {
-        },error: function (error, status) {
-
+          messages: $('.type_msg').val(),
+          typing: false,
+          photo: 'https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
+          actions: 'from'
         }
       });
     }
     $('.type_msg').val('');
   }
+
+  $('.type_msg').keydown(function() {
+    $('#typeMessages').show();
+    $.ajax({
+      url: '/pages',
+      type: 'get',
+      dataType: 'json',
+      data: {
+        messages: 'กำลังพิมพ์...',
+        typing: true,
+        photo: 'https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
+        actions: 'from'
+      }
+    });
+  });
 </script>
