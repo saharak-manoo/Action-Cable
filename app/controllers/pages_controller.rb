@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     ActionCable.server.broadcast 'web_notifications_channel',
                     message: params[:messages],
