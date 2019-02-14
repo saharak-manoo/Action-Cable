@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
-  get 'pages/index'
+  get 'messages/index'
   root 'homes#index'
 
-  resources :pages do
+  resources :messages do
     collection do
       get 'chat'
     end

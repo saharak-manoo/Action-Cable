@@ -14,8 +14,24 @@
 					</span>
 				</div>
 
+				<div class="wrap-input100 validate-input" data-validate = "First Name">
+          <%= f.text_field :first_name, autocomplete: "first_name", class: 'input100', placeholder: 'First Name', require: true %>
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-lock" aria-hidden="true"></i>
+					</span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate = "Last Name">
+          <%= f.text_field :last_name, autocomplete: "last_name", class: 'input100', placeholder: 'Last Name', require: true %>
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-lock" aria-hidden="true"></i>
+					</span>
+				</div>
+
 				<div class="wrap-input100 validate-input" data-validate = "Password is required">
-          <%= f.password_field :password, autocomplete: "new-password", class: 'input100', placeholder: 'Password' %>
+          <%= f.password_field :password, autocomplete: "new-password", class: 'input100', placeholder: 'Password', require: true %>
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-lock" aria-hidden="true"></i>
@@ -23,7 +39,7 @@
 				</div>
 
         <div class="wrap-input100 validate-input" data-validate = "Password is required">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'input100', placeholder: 'Password Confirmation' %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'input100', placeholder: 'Password Confirmation', require: true %>
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-lock" aria-hidden="true"></i>

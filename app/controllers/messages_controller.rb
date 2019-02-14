@@ -1,4 +1,4 @@
-class PagesController < ApplicationController
+class MessagesController < ApplicationController
   before_action :authenticate_user!
 
   def index
