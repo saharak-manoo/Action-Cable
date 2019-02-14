@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
     id = current_user&.id.to_i - 1
     @photo_you = photo[id]
     @recipient = User.where.not(id: current_user&.id).first
-    @messages = Message.all
+    @messages = Message.where(sender_id: [@recipient&.id, current_user&.id])
   end
 
   def chat
@@ -35,7 +35,8 @@ class MessagesController < ApplicationController
                       photo: params[:photo],
                       sender_id: params[:sender_id],
                       recipient_id: params[:recipient_id],
-                      current_user: current_user&.id.to_s
+                      current_user: current_user&.id.to_s,
+                      messages_count: Message.where(sender_id: [params[:sender_id], params[:recipient_id]]).count
     end
   end
 

@@ -38,7 +38,7 @@
             </div>
             <div class="user_info">
               <span>Chat with <%= @recipient&.full_name %></span>
-              <p><%= @messages.count %> Messages</p>
+              <p id="messagesCount-<%= current_user&.id %>And-<%= @recipient&.id %>"><%= @messages.count %> Messages</p>
             </div>
             <div class="video_cam">
               <span><i class="fas fa-video"></i></span>
@@ -101,6 +101,7 @@
 
 <script>
 
+  $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
   $('#send').click(function() {
     sendMsg();
   });
