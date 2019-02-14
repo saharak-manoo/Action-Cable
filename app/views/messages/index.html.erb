@@ -10,20 +10,12 @@
           </div>
         </div>
       </div>
+      <input type="hidden" id="senderID" value="<%= current_user&.id %>">
+      <input type="hidden" id="recipientID" value="<%= @recipient&.id %>">
+      <input type="hidden" id="roomID" value="<%= @chat_room&.room_id %>">
       <div class="card-body contacts_body">
-        <ui class="contacts">
-        <li class="active">
-          <div class="d-flex bd-highlight">
-            <div class="img_cont">
-              <img src="<%= @photo %>" class="rounded-circle user_img">
-              <span class="online_icon"></span>
-            </div>
-            <div class="user_info">
-              <span><%= @recipient&.full_name %></span>
-              <p><%= @recipient&.full_name %> is online</p>
-            </div>
-          </div>
-        </li>
+        <ui class="contacts contacts-<%= current_user&.id %>">
+          <%= render 'messages/contacts' %>
         </ui>
       </div>
       <div class="card-footer"></div>
@@ -33,7 +25,7 @@
         <div class="card-header msg_head">
           <div class="d-flex bd-highlight">
             <div class="img_cont">
-              <img src="<%= @photo %>" class="rounded-circle user_img">
+              <img src="<%= @recipient&.photo %>" class="rounded-circle user_img">
               <span class="online_icon"></span>
             </div>
             <div class="user_info">
@@ -56,32 +48,7 @@
           </div>
         </div>
         <div class="card-body msg_card_body chat-room-<%= current_user&.id %>">
-          <% @messages.each do |message| %>
-            <% date_to_day = message&.created_at.strftime('%d').to_i >= DateTime.now.strftime('%d').to_i %>
-            <% if message.recipient_id == current_user&.id %>
-              <div class="d-flex justify-content-start mb-4">
-                <div class="img_cont_msg">
-                  <img src="<%= @photo %>" class="rounded-circle user_img_msg">
-                </div>
-                <div class="msg_cotainer">
-                  <%= message&.messages %>
-                  <span class="msg_time"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
-                </div>
-              </div>
-            <% else %>
-              <div class="d-flex justify-content-end mb-4">
-                <div class="msg_cotainer_send">
-                  <%= message&.messages %>
-                  <span class="msg_time_send"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
-                </div>
-                <div class="img_cont_msg">
-                <img src="<%= @photo_you %>" class="rounded-circle user_img_msg">
-                </div>
-              </div>
-            <% end %>
-          <% end %>
-          <div id="messages-<%= current_user&.id %>"></div>
-          <div id="typeMessages"></div>
+          <%= render 'messages/messages' %>
         </div>
         <div class="card-footer">
           <div class="input-group">
@@ -101,7 +68,8 @@
 
 <script>
 
-  $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
+  let temp_message = 0;
+  // $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
   $('#send').click(function() {
     sendMsg();
   });
@@ -115,17 +83,20 @@
   }
 
   function sendMsg() {
+    temp_message += 1;
     if ($('.type_msg').val() != '') {
       $.ajax({
         url: '/messages/chat',
         type: 'get',
-        dataType: 'json',
+        dataType: 'js',
         data: {
           messages: $('.type_msg').val(),
           typing: false,
-          photo: "<%= @photo_you %>",
-          sender_id: <%= current_user&.id %>,
-          recipient_id: <%= @recipient&.id %>
+          photo: "<%= current_user&.photo %>",
+          sender_id: $('#senderID').val(),
+          recipient_id: $('#recipientID').val(),
+          room_id: $('#roomID').val(),
+          temp_message: temp_message
         }
       });
     }
@@ -141,10 +112,25 @@
       data: {
         messages: 'กำลังพิมพ์...',
         typing: true,
-        photo: "<%= @photo_you %>",
-        sender_id: <%= current_user&.id %>,
-        recipient_id: <%= @recipient&.id %>
+        photo: "<%= current_user&.photo %>",
+        sender_id: $('#senderID').val(),
+        recipient_id: $('#recipientID').val()
       }
     });
   });
+
+  function showChat(id, recipientID) {
+    $('#recipientID').val(recipientID)
+    $('.contact').removeClass('active');
+    $('#'+ id).addClass('active');
+    $.ajax({
+      url: '/messages/change_chat',
+      type: 'get',
+      dataType: 'json',
+      data: {
+        recipient_id: recipientID,
+        sender_id: <%= current_user&.id %>
+      }
+    });
+  }
 </script>

@@ -1,13 +1,9 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!
+  respond_to :html, :xlsx, :js, :json
 
   def index
-    photo = ['https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg', 'http://profilepicturesdp.com/wp-content/uploads/2018/07/sweet-girl-profile-pictures-9.jpg', 'https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg']
-    @photo = photo[current_user&.id]
-    id = current_user&.id.to_i - 1
-    @photo_you = photo[id]
-    @recipient = User.where.not(id: current_user&.id).first
-    @messages = Message.where(sender_id: [@recipient&.id, current_user&.id])
+    load_data
   end
 
   def chat
@@ -38,10 +34,38 @@ class MessagesController < ApplicationController
                       current_user: current_user&.id.to_s,
                       messages_count: Message.where(sender_id: [params[:sender_id], params[:recipient_id]]).count
     end
+    # if params[:temp_message].to_i >= 4
+    #   load_data
+    #   @messages = Message.all
+    #   ActionCable.server.broadcast 'reload_messages_channel',
+    #                   messages: @messages,
+    #                   sender_id: params[:sender_id],
+    #                   recipient_id: params[:recipient_id],
+    #                   photo: @photo,
+    #                   photo_you: @photo_you
+    # end
+  end
+
+  def change_chat
+    load_data
+    @messages = Message.all
+    ActionCable.server.broadcast 'reload_messages_channel',
+                      messages: @messages,
+                      sender_id: params[:sender_id],
+                      recipient_id: params[:recipient_id],
+                      photo: @photo,
+                      photo_you: @photo_you
+  end
+
+  def load_data
+    @users = User.where.not(id: current_user&.id)
+    @recipient = User.find_by(id: @users&.first&.id)
+    @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
+    @messages = Message.where(room_id: @chat_room&.room_id)
   end
 
   def message_params
-    params.permit(:messages, :sender_id, :recipient_id)
+    params.permit(:messages, :sender_id, :recipient_id, :room_id)
   end
 end
 

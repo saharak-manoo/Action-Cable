@@ -6,3 +6,4 @@ class WebNotificationsChannel < ApplicationCable::Channel
   def unsubscribed
   end
 end
+
