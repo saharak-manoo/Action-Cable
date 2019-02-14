@@ -14,7 +14,7 @@ class MessagesController < ApplicationController
     if params[:typing] == 'true'
       ActionCable.server.broadcast 'web_notifications_channel',
                       message: params[:messages],
-                      time: Time.now.strftime("%H:%M"),
+                      time: "#{Time.now.strftime("%H:%M")}, Today",
                       typing: params[:typing],
                       photo: params[:photo],
                       sender_id: params[:sender_id],
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
     if message.save
       ActionCable.server.broadcast 'web_notifications_channel',
                       message: message&.messages,
-                      time: message&.created_at&.strftime("%H:%M"),
+                      time: "#{message&.created_at&.strftime("%H:%M")}, Today",
                       typing: params[:typing],
                       photo: params[:photo],
                       sender_id: params[:sender_id],

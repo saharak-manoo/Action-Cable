@@ -17,7 +17,7 @@
 
 function messagesTO(data) {
   html = '<div class="d-flex justify-content-end mb-4">'+
-          '<div class="msg_cotainer_send" id="text">'+ data['message'] +'<span class="msg_time_send">'+ data['time'] +', Today</span> </div>'+
+          '<div class="msg_cotainer_send" id="text">'+ data['message'] +'<span class="msg_time_send">'+ data['time'] +'</span> </div>'+
           '<div class="img_cont_msg"> <img src="'+ data['photo'] +'"'+
           'class="rounded-circle user_img_msg"> </div></div>'
   return html;
@@ -27,7 +27,7 @@ function messagesForm(data) {
   html = '<div class="d-flex justify-content-start mb-4">'+
           '<div class="img_cont_msg"> <img src="'+ data['photo'] +'" '+
           'class="rounded-circle user_img_msg"> </div> <div class="msg_cotainer">'+
-          ''+ data['message'] +' <span class="msg_time">'+ data['time'] +', Today</span> </div> </div>'
+          ''+ data['message'] +' <span class="msg_time">'+ data['time'] +'</span> </div> </div>'
   return html;
 }
 
