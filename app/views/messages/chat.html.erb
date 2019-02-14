@@ -138,7 +138,7 @@
   function sendMsg() {
     if ($('.type_msg').val() != '') {
       $.ajax({
-        url: '/pages',
+        url: '/messages/chat',
         type: 'get',
         dataType: 'json',
         data: {
@@ -155,7 +155,7 @@
   $('.type_msg').keydown(function() {
     $('#typeMessages').show();
     $.ajax({
-      url: '/pages',
+      url: '/messages/chat',
       type: 'get',
       dataType: 'json',
       data: {

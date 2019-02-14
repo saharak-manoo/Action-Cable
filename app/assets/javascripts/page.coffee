@@ -5,12 +5,9 @@ App.room = App.cable.subscriptions.create "WebNotificationsChannel",
   received: (data) ->
     if data['typing'] == 'false'
       $('#typeMessages').hide();
-      if data['actions'] == 'from'
-        $('#messages').append messagesForm(data);
-        $('#messagesFrom').append messagesTO(data);
-      else
-        $('#messagesFrom').append messagesForm(data);
-        $('#messages').append messagesTO(data);
+      if data['sender_id'] == data['current_user']
+        $('#messages-'+ data['recipient_id']).append messagesForm(data);
+        $('#messages-'+ data['current_user']).append messagesTO(data);
     else
       $('#typeMessages').html(messagesTO(data));
       hideTypeing();

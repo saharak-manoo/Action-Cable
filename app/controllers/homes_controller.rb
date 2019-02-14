@@ -1,7 +1,7 @@
 class HomesController < ApplicationController
   def index
     if current_user
-      redirect_to pages_path
+      redirect_to messages_path
     else
       redirect_to new_user_session_path
     end
