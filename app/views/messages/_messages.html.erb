@@ -1,4 +1,4 @@
-<% @messages.each do |message| %>
+<% @messages.sort {|x, y| x[:id] <=> y[:id]}.each do |message| %>
   <% date_to_day = message&.created_at.strftime('%d').to_i >= DateTime.now.strftime('%d').to_i %>
   <% if message.recipient_id == current_user&.id %>
     <div class="d-flex justify-content-start mb-4">

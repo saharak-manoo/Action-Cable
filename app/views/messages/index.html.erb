@@ -30,7 +30,7 @@
             </div>
             <div class="user_info">
               <span id="chatWithName-<%= current_user&.id %>">Chat with <%= @recipient&.full_name %></span>
-              <p id="messagesCount-<%= current_user&.id %>"><%= @messages.count %> Messages</p>
+              <p id="messagesCount-<%= current_user&.id %>"><%= @messages_total&.count%> Messages</p>
             </div>
             <div class="video_cam">
               <span><i class="fas fa-video"></i></span>
@@ -69,7 +69,7 @@
 <script>
 
   let temp_message = 0;
-  // $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
+  $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
   $('#send').click(function() {
     sendMsg();
   });

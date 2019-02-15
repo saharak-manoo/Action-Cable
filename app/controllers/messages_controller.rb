@@ -22,6 +22,7 @@ class MessagesController < ApplicationController
   end
 
   def create_message
+    chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
     message = Message.new(message_params)
     if message.save
       ActionCable.server.broadcast 'web_notifications_channel',
@@ -32,19 +33,22 @@ class MessagesController < ApplicationController
                       sender_id: params[:sender_id],
                       recipient_id: params[:recipient_id],
                       current_user: current_user&.id.to_s,
-                      messages_count: Message.where(sender_id: [params[:sender_id], params[:recipient_id]]).count
+                      messages_count: Message.where(room_id: chat_room&.room_id).count
+    end
+    if params[:temp_message].to_i >= 4
+      change_chat
     end
   end
 
   def change_chat
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
-    messages = Message.where(room_id: chat_room&.room_id)
+    messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(10)
     ActionCable.server.broadcast 'reload_messages_channel',
                                   messages: chat_datas(messages),
                                   sender_id: params[:sender_id].to_i,
                                   recipient_id: params[:recipient_id],
                                   chat_with: chat_with(params[:recipient_id]),
-                                  messages_count: messages.count
+                                  messages_count: Message.where(room_id: chat_room&.room_id).count
   end
 
   def chat_datas(messages)
@@ -52,6 +56,7 @@ class MessagesController < ApplicationController
     messages.each do |data|
       date_to_day = data&.created_at.strftime('%d').to_i >= DateTime.now.strftime('%d').to_i
       datas << {
+        id: data&.id,
         message: data&.messages,
         time: "#{data&.created_at&.strftime("%H:%M")}, #{date_to_day ? 'Today' : data&.created_at&.strftime('%d/%m/%Y')}",
         sender_id: data&.sender_id,
@@ -61,7 +66,7 @@ class MessagesController < ApplicationController
       }
     end
 
-    return datas
+    return datas.sort {|x, y| x[:id] <=> y[:id]}
   end
 
   def chat_with(id)
@@ -78,7 +83,8 @@ class MessagesController < ApplicationController
     @users = User.where.not(id: current_user&.id)
     @recipient = User.find_by(id: @users&.first&.id)
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
-    @messages = Message.where(room_id: @chat_room&.room_id)
+    @messages_total = Message.where(room_id: @chat_room&.room_id)
+    @messages = Message.where(room_id: @chat_room&.room_id).order(created_at: :desc).limit(10)
   end
 
   def message_params
