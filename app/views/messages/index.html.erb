@@ -165,8 +165,8 @@
   });
 
   $('.msg_card_body').scroll(function() {
-    let temp_message = $('.msg_card_body .justify-content-start').length
-    temp_message += $('.msg_card_body .justify-content-end').length
+    let count_message = $('.msg_card_body .justify-content-start').length
+    count_message += $('.msg_card_body .justify-content-end').length
     if ($('.msg_card_body').scrollTop() == 0) {
       $('.load-bar').show();
       $.ajax({
@@ -176,7 +176,7 @@
         data: {
           sender_id: <%= current_user&.id %>,
           recipient_id: $('#recipientID').val(),
-          temp_message: (temp_message + 10)
+          count_message: (count_message + 10)
         }
       });
     }
