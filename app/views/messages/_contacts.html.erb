@@ -3,11 +3,11 @@
     <div class="d-flex bd-highlight" onclick="showChat('user-<%= index %>', '<%= user&.id %>')">
       <div class="img_cont">
         <img src="<%= user&.photo %>" class="rounded-circle user_img">
-        <span class="online_icon"></span>
+        <span class="online_icon <%= user&.online? ? '' : 'offline' %> onlineStatus-<%= user&.id %>"></span>
       </div>
       <div class="user_info">
         <span><%= user&.full_name %></span>
-        <p><%= user&.full_name %> is online</p>
+        <p class="onlineText-<%= user&.id %>"><%= user&.offline_time? %></p>
       </div>
     </div>
   </li>

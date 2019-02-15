@@ -25,11 +25,11 @@
           <div class="d-flex bd-highlight">
             <div class="img_cont">
               <img src="<%= @recipient&.photo %>" class="rounded-circle user_img photo-with-chat chatWithPhoto-<%= current_user&.id %>and-<%= @recipient&.id %>">
-              <span class="online_icon"></span>
+              <span class="online_icon online-<%= current_user&.id %>and-<%= @recipient&.id %> <%= @recipient&.online? ? '' : 'offline' %> onlineStatus-<%= @recipient&.id %>"></span>
             </div>
             <div class="user_info">
               <span class="name chatWithName-<%= current_user&.id %>and-<%= @recipient&.id %>">Chat with <%= @recipient&.full_name %></span>
-              <p class="count messagesCount-<%= current_user&.id %>and-<%= @recipient&.id %>"><%= @messages_total&.count%> Messages</p>
+              <p class="count messagesCount-<%= current_user&.id %>and-<%= @recipient&.id %>"><%= @messages_total&.count%> Messages : <span class="onlineText-<%= @recipient&.id %>"><%= @recipient&.offline_time? %></span></p>
             </div>
             <div class="video_cam">
               <span><i class="fas fa-video"></i></span>
@@ -126,6 +126,8 @@
   function showChat(id, recipientID) {
     let recipient = '<%= current_user&.id %>and-'+ $('#recipientID').val()
     let sender = '<%= current_user&.id %>and-'+ recipientID
+    $('.online_icon').removeClass('online-'+ recipient);
+    $('.online_icon').addClass('online-'+ sender);
     $('.photo-with-chat').removeClass('chatWithPhoto-'+ recipient);
     $('.photo-with-chat').addClass('chatWithPhoto-'+ sender);
     $('.name').removeClass('chatWithName-'+ recipient);

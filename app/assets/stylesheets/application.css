@@ -142,8 +142,8 @@ margin-top: auto;
 margin-bottom: auto;
 margin-left: 15px;
 }
-.user_info span{
-font-size: 20px;
+.user_info {
+font-size: 16px;
 color: white;
 }
 .user_info p{
@@ -710,3 +710,4 @@ iframe {
 .hide {
   display: none;
 }
+

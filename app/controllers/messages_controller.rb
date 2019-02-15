@@ -58,9 +58,7 @@ class MessagesController < ApplicationController
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
     messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(params[:count_message].present? ? params[:count_message].to_i : 10)
     users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
-    if users.empty?
-      users = User.where.not(id: current_user&.id)
-    end
+    users = User.where.not(id: current_user&.id) if users.empty?
     ActionCable.server.broadcast 'reload_messages_channel',
                                   messages: chat_datas(messages),
                                   sender_id: params[:sender_id].to_i,
@@ -89,21 +87,9 @@ class MessagesController < ApplicationController
     return datas.sort {|x, y| x[:id] <=> y[:id]}
   end
 
-  def chat_with(id)
-    user = User.find_by(id: id)
-    datas = {
-      full_name: user&.full_name,
-      photo: user&.photo
-    }
-
-    return datas
-  end
-
   def load_data
     @users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
-    if @users.empty?
-      @users = User.where.not(id: current_user&.id)
-    end
+    @users = User.where.not(id: current_user&.id) if @users.empty?
     @recipient = User.find_by(id: @users&.first&.id)
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
     @messages_total = Message.where(room_id: @chat_room&.room_id)
@@ -142,7 +128,9 @@ class MessagesController < ApplicationController
       datas << {
         id: user&.id,
         full_name: user&.full_name,
-        photo: user&.photo
+        photo: user&.photo,
+        online: user&.online?,
+        offline_time: user&.offline_time?
       }
     end
 

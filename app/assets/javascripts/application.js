@@ -77,7 +77,12 @@ function renderChats(data) {
   let sender = data.sender_id +'and-'+ data.recipient_id
   $('.chatWithPhoto-'+ sender).attr('src', data.chat_with.photo);
   $('.chatWithName-'+ sender).html('Chat with '+ data.chat_with.full_name);
-  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages');
+  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages : <span class="onlineText-'+ data.recipient_id +'">'+ data.chat_with.offline_time+'<span>');
+  if (data.chat_with.online == true) {
+    $('.online-'+ sender).removeClass('offline');
+  } else {
+    $('.online-'+ sender).addClass('offline');
+  }
   $('.chat-room-'+ sender).html(renderChat(data, true));
   if (data.count_message != true) {
     $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
@@ -90,21 +95,31 @@ function renderContactsList(data) {
   html = '';
   $.each(data.contacts_list, function (index) {
     active = (data.contacts_list[index].id == data.recipient_id ? "active" : "");
+    offline = (data.contacts_list[index].online ? "" : "offline");
     userIndex = "'user-"+ index +"'";
     contactsList = "'"+ data.contacts_list[index].id +"'"
     html += '<li class="contact '+ active +'" id="user-'+ index +'">'+
               '<div class="d-flex bd-highlight" onclick="showChat('+ userIndex +', '+ contactsList +')">'+
                 '<div class="img_cont">'+
                   '<img src="'+ data.contacts_list[index].photo +'" class="rounded-circle user_img">'+
-                  '<span class="online_icon"></span>'+
+                  '<span class="online_icon '+ offline +'"></span>'+
                 '</div>'+
                 '<div class="user_info">'+
                   '<span>'+ data.contacts_list[index].full_name +'</span>'+
-                  '<p>'+ data.contacts_list[index].full_name +' is online</p>'+
+                  '<p>'+ data.contacts_list[index].offline_time +'</p>'+
                 '</div>'+
               '</div>'+
             '</li>'
   })
 
   return html;
+}
+
+function reloadStatusOnSessions(data) {
+  if (data.new_sessions.online == true) {
+    $('.onlineStatus-'+ data.new_sessions.id).removeClass('offline');
+  } else {
+    $('.onlineStatus-'+ data.new_sessions.id).addClass('offline');
+  }
+  $('.onlineText-'+ data.new_sessions.id).text(data.new_sessions.offline_time);
 }
