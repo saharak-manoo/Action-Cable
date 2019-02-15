@@ -23,7 +23,13 @@ class MessagesController < ApplicationController
 
   def create_message
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
-    message = Message.new(message_params)
+    if chat_room.nil?
+      room_id = create_chat_rooms
+    else
+      room_id = chat_room&.room_id
+    end
+
+    message = Message.new(message_params.merge(room_id: room_id))
     if message.save
       ActionCable.server.broadcast 'web_notifications_channel',
                       message: message&.messages,
@@ -33,11 +39,18 @@ class MessagesController < ApplicationController
                       sender_id: params[:sender_id].to_i,
                       recipient_id: params[:recipient_id].to_i,
                       current_user: current_user&.id.to_i,
-                      messages_count: Message.where(room_id: chat_room&.room_id).count
+                      messages_count: Message.where(room_id: room_id).count
     end
-    if params[:temp_message].to_i >= 15
-      change_chat
-    end
+
+    change_chat if params[:temp_message].to_i >= 14
+  end
+
+  def create_chat_rooms
+    chat_room_id = ((ChatRoom&.last&.room_id&.to_i) || 0) + 1
+    chat_room = ChatRoom.create!(sender_id: params[:sender_id], recipient_id: params[:recipient_id], room_id: chat_room_id)
+    chat_room = ChatRoom.create!(sender_id: params[:recipient_id], recipient_id: params[:sender_id], room_id: chat_room_id)
+
+    return chat_room&.room_id
   end
 
   def change_chat
@@ -80,7 +93,7 @@ class MessagesController < ApplicationController
   end
 
   def load_data
-    @users = User.where.not(id: current_user&.id)
+    @users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
     @recipient = User.find_by(id: @users&.first&.id)
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
     @messages_total = Message.where(room_id: @chat_room&.room_id)
@@ -88,7 +101,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.permit(:messages, :sender_id, :recipient_id, :room_id)
+    params.permit(:messages, :sender_id, :recipient_id)
   end
 end
 

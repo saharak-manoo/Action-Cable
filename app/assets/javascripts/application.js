@@ -65,8 +65,8 @@ function renderChat(data, reverse) {
 function pushMessage(data) {
   let recipient = data.recipient_id +'and-'+ data.sender_id
   let sender = data.sender_id +'and-'+ data.recipient_id
-  $('#messagesCount-'+ sender).html(data.messages_count + '  Messages');
-  $('#messagesCount-'+ recipient).html(data.messages_count + '  Messages');
+  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages');
+  $('.messagesCount-'+ recipient).html(data.messages_count + '  Messages');
   $('.messages-'+ recipient).append(messagesForm(data.message, data.time, data.photo));
   $('.messages-'+ sender).append(messagesTO(data.message, data.time, data.photo));
   $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');

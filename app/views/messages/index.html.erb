@@ -12,11 +12,10 @@
       </div>
       <input type="hidden" id="senderID" value="<%= current_user&.id %>">
       <input type="hidden" id="recipientID" value="<%= @recipient&.id %>">
-      <input type="hidden" id="roomID" value="<%= @chat_room&.room_id %>">
       <div class="card-body contacts_body">
-        <ui class="contacts contacts-<%= current_user&.id %>">
+        <ul class="contacts contacts-<%= current_user&.id %>">
           <%= render 'messages/contacts' %>
-        </ui>
+        </ul>
       </div>
       <div class="card-footer"></div>
     </div></div>
@@ -82,8 +81,8 @@
   }
 
   function sendMsg() {
-    let temp_message = $('.chat-room-<%= current_user&.id %> .justify-content-start').length
-    temp_message += $('.chat-room-<%= current_user&.id %> .justify-content-end').length
+    let temp_message = $('.msg_card_body .justify-content-start').length
+    temp_message += $('.msg_card_body .justify-content-end').length
     if ($('.type_msg').val() != '') {
       $.ajax({
         url: '/messages/chat',
@@ -95,7 +94,6 @@
           photo: "<%= current_user&.photo %>",
           sender_id: $('#senderID').val(),
           recipient_id: $('#recipientID').val(),
-          room_id: $('#roomID').val(),
           temp_message: temp_message
         }
       });
