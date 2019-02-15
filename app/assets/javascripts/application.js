@@ -15,22 +15,36 @@
 //= require turbolinks
 //= require_tree .
 
-function messagesTO(data) {
+function messagesTO(message, time, photo) {
   html = '<div class="d-flex justify-content-end mb-4">'+
-          '<div class="msg_cotainer_send" id="text">'+ data['message'] +'<span class="msg_time_send">'+ data['time'] +', Today</span> </div>'+
-          '<div class="img_cont_msg"> <img src="'+ data['photo'] +'"'+
+          '<div class="msg_cotainer_send" id="text">'+ message +'<span class="msg_time_send">'+ time +'</span> </div>'+
+          '<div class="img_cont_msg"> <img src="'+ photo +'"'+
           'class="rounded-circle user_img_msg"> </div></div>'
   return html;
 }
 
-function messagesForm(data) {
+function messagesForm(message, time, photo) {
   html = '<div class="d-flex justify-content-start mb-4">'+
-          '<div class="img_cont_msg"> <img src="'+ data['photo'] +'" '+
+          '<div class="img_cont_msg"> <img src="'+ photo +'" '+
           'class="rounded-circle user_img_msg"> </div> <div class="msg_cotainer">'+
-          ''+ data['message'] +' <span class="msg_time">'+ data['time'] +', Today</span> </div> </div>'
+          ''+ message +' <span class="msg_time">'+ time +'</span> </div> </div>'
   return html;
 }
 
 function hideTypeing() {
   setTimeout(function(){ $('#typeMessages').hide(); }, 600);
+}
+
+function renderChat(data) {
+  html = '';
+  temp_message = 0;
+  $.each(data.messages, function (index) {
+    if (data.messages[index].recipient_id == data.sender_id) {
+      html += messagesForm(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+    } else {
+      html += messagesTO(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+    }
+  })
+  html += '<div id="messages-'+ data.sender_id +'"></div><div id="typeMessages"></div>'
+  return html;
 }
