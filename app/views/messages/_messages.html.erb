@@ -23,4 +23,14 @@
   <% end %>
 <% end %>
 <div class="showMessages messages-<%= current_user&.id %>and-<%= @recipient&.id %>"></div>
-<div id="typeMessages"></div>
+<div class="type-messages-<%= current_user&.id %> hide">
+  <div class="d-flex justify-content-end mb-4">
+    <div class="msg_cotainer_send">
+      กำลังพิมพ์...
+      <span class="msg_time_send">Now, Today</span>
+    </div>
+    <div class="img_cont_msg">
+  <img src="<%= current_user&.photo %>" class="rounded-circle user_img_msg">
+    </div>
+  </div>
+</div>

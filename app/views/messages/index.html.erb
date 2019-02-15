@@ -108,19 +108,8 @@
   }
 
   $('.type_msg').keydown(function() {
-    $('#typeMessages').show();
-    $.ajax({
-      url: '/messages/chat',
-      type: 'get',
-      dataType: 'json',
-      data: {
-        messages: 'กำลังพิมพ์...',
-        typing: true,
-        photo: "<%= current_user&.photo %>",
-        sender_id: $('#senderID').val(),
-        recipient_id: $('#recipientID').val()
-      }
-    });
+    $('.type-messages-<%= current_user&.id %>').show();
+    setTimeout(function(){ $('.type-messages-<%= current_user&.id %>').hide(); }, 1000);
   });
 
   function showChat(id, recipientID) {

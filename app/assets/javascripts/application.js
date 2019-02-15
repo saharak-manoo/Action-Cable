@@ -31,10 +31,6 @@ function messagesForm(message, time, photo) {
   return html;
 }
 
-function hideTypeing() {
-  setTimeout(function(){ $('#typeMessages').hide(); }, 600);
-}
-
 function renderChat(data, reverse) {
   html = '<div class="load-bar hide"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><br>';
   $.each(data.messages, function (index) {
@@ -53,11 +49,12 @@ function renderChat(data, reverse) {
     }
   })
   if (reverse == true) {
-    html += '<div class="showMessages messages-'+ data.sender_id +'and-'+ data.recipient_id +'"></div><div id="typeMessages"></div>'
+    html += '<div class="showMessages messages-'+ data.sender_id +'and-'+ data.recipient_id +'"></div>'
   } else {
-    html += '<div class="showMessages messages-'+ data.recipient_id +'and-'+ data.sender_id +'"></div><div id="typeMessages"></div>'
+    html += '<div class="showMessages messages-'+ data.recipient_id +'and-'+ data.sender_id +'"></div>'
   }
 
+  html += '<div class="type-messages-'+ data.sender_id +' hide"> <div class="d-flex justify-content-end mb-4"> <div class="msg_cotainer_send"> กำลังพิมพ์... <span class="msg_time_send">Now, Today</span> </div> <div class="img_cont_msg"> <img src="'+ data.photo +'" class="rounded-circle user_img_msg"> </div> </div> </div>'
   return html;
 }
 
@@ -106,7 +103,7 @@ function renderContactsList(data) {
                 '</div>'+
                 '<div class="user_info">'+
                   '<span>'+ data.contacts_list[index].full_name +'</span>'+
-                  '<p>'+ data.contacts_list[index].offline_time +'</p>'+
+                  '<p class="onlineText-'+ data.contacts_list[index].id +'">'+ data.contacts_list[index].offline_time +'</p>'+
                 '</div>'+
               '</div>'+
             '</li>'

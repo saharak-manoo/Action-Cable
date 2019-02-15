@@ -3,11 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 App.room = App.cable.subscriptions.create "WebNotificationsChannel",
   received: (data) ->
-    if data.typing == 'false'
-      $('#typeMessages').hide();
       pushMessage(data);
       $('.contacts-'+ data.sender_id).html(renderContactsList(data));
       $('.contacts_body-'+ data.sender_id).animate({ scrollTop: 0 }, 'slow');
-    else
-      $('#typeMessages').html(messagesTO(data.message, data.time, data.photo));
-      hideTypeing();

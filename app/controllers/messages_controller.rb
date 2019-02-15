@@ -7,19 +7,7 @@ class MessagesController < ApplicationController
   end
 
   def chat
-    if params[:typing] == 'true'
-      ActionCable.server.broadcast 'web_notifications_channel',
-                      message: params[:messages],
-                      time: "#{Time.now.strftime("%H:%M")}, Today",
-                      typing: params[:typing],
-                      photo: params[:photo],
-                      sender_id: params[:sender_id].to_i,
-                      recipient_id: params[:recipient_id].to_i,
-                      current_user: current_user&.id.to_i,
-                      chat_with: chat_with(params[:recipient_id])
-    else
-      create_message
-    end
+    create_message
   end
 
   def create_message
@@ -35,14 +23,13 @@ class MessagesController < ApplicationController
       ActionCable.server.broadcast 'web_notifications_channel',
                       message: message&.messages,
                       time: "#{message&.created_at&.strftime("%H:%M")}, Today",
-                      typing: params[:typing],
                       photo: params[:photo],
                       sender_id: params[:sender_id].to_i,
                       recipient_id: params[:recipient_id].to_i,
                       current_user: current_user&.id.to_i,
                       messages_count: Message.where(room_id: room_id).count,
                       chat_with: chat_with(params[:recipient_id]),
-                      contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
+                      contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).where('messages.sender_id = ?', current_user&.id).order('messages.created_at desc')&.uniq)
     end
 
     change_chat if params[:temp_message].to_i >= 14
@@ -59,7 +46,7 @@ class MessagesController < ApplicationController
   def change_chat
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
     messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(params[:count_message].present? ? params[:count_message].to_i : 10)
-    users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
+    users = User.where.not(id: current_user&.id).joins(:message_as_recipient).where('messages.sender_id = ?', current_user&.id).order('messages.created_at desc')&.uniq
     users = User.where.not(id: current_user&.id) if users.empty?
     ActionCable.server.broadcast 'reload_messages_channel',
                                   messages: chat_datas(messages),
@@ -68,7 +55,8 @@ class MessagesController < ApplicationController
                                   chat_with: chat_with(params[:recipient_id]),
                                   messages_count: Message.where(room_id: chat_room&.room_id).count,
                                   contacts_list: contacts_list(users),
-                                  count_message: params[:count_message].present?
+                                  count_message: params[:count_message].present?,
+                                  photo: current_user&.photo
   end
 
   def chat_datas(messages)
@@ -90,7 +78,7 @@ class MessagesController < ApplicationController
   end
 
   def load_data
-    @users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
+    @users = User.where.not(id: current_user&.id).joins(:message_as_recipient).where('messages.sender_id = ?', current_user&.id).order('messages.created_at desc')&.uniq
     @users = User.where.not(id: current_user&.id) if @users.empty?
     @recipient = User.find_by(id: @users&.first&.id)
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
@@ -116,7 +104,6 @@ class MessagesController < ApplicationController
     end
 
     users = contacts_list(users)
-
     ActionCable.server.broadcast 'reload_messages_channel',
                                   contacts_list: users,
                                   sender_id: params[:sender_id].to_i,
