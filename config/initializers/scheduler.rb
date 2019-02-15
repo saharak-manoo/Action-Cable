@@ -2,7 +2,7 @@ require 'rufus-scheduler'
 
 scheduler = Rufus::Scheduler::singleton
 
-scheduler.every '59s' do
+scheduler.every '5m' do
   ActionCable.server.broadcast 'reload_actives_channel',
                                   new_sessions: users,
                                   sessions: false
