@@ -15,7 +15,8 @@ class MessagesController < ApplicationController
                       photo: params[:photo],
                       sender_id: params[:sender_id].to_i,
                       recipient_id: params[:recipient_id].to_i,
-                      current_user: current_user&.id.to_i
+                      current_user: current_user&.id.to_i,
+                      chat_with: chat_with(params[:recipient_id])
     else
       create_message
     end
@@ -40,6 +41,7 @@ class MessagesController < ApplicationController
                       recipient_id: params[:recipient_id].to_i,
                       current_user: current_user&.id.to_i,
                       messages_count: Message.where(room_id: room_id).count,
+                      chat_with: chat_with(params[:recipient_id]),
                       contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
     end
 

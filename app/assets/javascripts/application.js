@@ -64,8 +64,8 @@ function renderChat(data, reverse) {
 function pushMessage(data) {
   let recipient = data.recipient_id +'and-'+ data.sender_id
   let sender = data.sender_id +'and-'+ data.recipient_id
-  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages');
-  $('.messagesCount-'+ recipient).html(data.messages_count + '  Messages');
+  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages : <span class="onlineText-'+ data.recipient_id +'">'+ data.chat_with.offline_time+'<span>');
+  $('.messagesCount-'+ recipient).html(data.messages_count + '  Messages : <span class="onlineText-'+ data.recipient_id +'">'+ data.chat_with.offline_time+'<span>');
   $('.messages-'+ recipient).append(messagesForm(data.message, data.time, data.photo));
   $('.messages-'+ sender).append(messagesTO(data.message, data.time, data.photo));
   $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');
@@ -122,4 +122,15 @@ function reloadStatusOnSessions(data) {
     $('.onlineStatus-'+ data.new_sessions.id).addClass('offline');
   }
   $('.onlineText-'+ data.new_sessions.id).text(data.new_sessions.offline_time);
+}
+
+function reloadStatusNotSessions(data) {
+  $.each(data.new_sessions, function (index) {
+    if (data.new_sessions[index].online == true) {
+      $('.onlineStatus-'+ data.new_sessions[index].id).removeClass('offline');
+    } else {
+      $('.onlineStatus-'+ data.new_sessions[index].id).addClass('offline');
+    }
+    $('.onlineText-'+ data.new_sessions[index].id).text(data.new_sessions[index].offline_time);
+  });
 }
