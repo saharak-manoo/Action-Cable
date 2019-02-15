@@ -36,7 +36,7 @@ function hideTypeing() {
 }
 
 function renderChat(data, reverse) {
-  html = '';
+  html = '<div class="load-bar hide"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><br>';
   $.each(data.messages, function (index) {
     if (data.messages[index].recipient_id == data.sender_id) {
       if (reverse == true) {
@@ -79,7 +79,9 @@ function renderChats(data) {
   $('.chatWithName-'+ sender).html('Chat with '+ data.chat_with.full_name);
   $('.messagesCount-'+ sender).html(data.messages_count + '  Messages');
   $('.chat-room-'+ sender).html(renderChat(data, true));
-  $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
+  if (data.temp_message != true) {
+    $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
+  }
   $('.chat-room-'+ recipient).html(renderChat(data, false));
   $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');
 }

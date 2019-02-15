@@ -56,7 +56,7 @@ class MessagesController < ApplicationController
 
   def change_chat
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
-    messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(10)
+    messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(params[:temp_message].present? ? params[:temp_message].to_i : 10)
     users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
     if users.empty?
       users = User.where.not(id: current_user&.id)
@@ -67,7 +67,8 @@ class MessagesController < ApplicationController
                                   recipient_id: params[:recipient_id].to_i,
                                   chat_with: chat_with(params[:recipient_id]),
                                   messages_count: Message.where(room_id: chat_room&.room_id).count,
-                                  contacts_list: contacts_list(users)
+                                  contacts_list: contacts_list(users),
+                                  temp_message: params[:temp_message].present?
   end
 
   def chat_datas(messages)

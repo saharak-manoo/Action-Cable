@@ -47,6 +47,12 @@
           </div>
         </div>
         <div class="card-body msg_card_body chat-room-<%= current_user&.id %>and-<%= @recipient&.id %>">
+          <div class="load-bar hide">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+          <br>
           <%= render 'messages/messages' %>
         </div>
         <div class="card-footer">
@@ -142,8 +148,6 @@
         recipient_id: recipientID
       }
     });
-
-    $('.contacts_body-'+ data.sender_id).animate({ scrollTop: 0 }, 'slow');
   }
 
   $('#searchContacts').keyup(function () {
@@ -159,4 +163,22 @@
       }
     });
   });
+
+  $('.msg_card_body').scroll(function() {
+    let temp_message = $('.msg_card_body .justify-content-start').length
+    temp_message += $('.msg_card_body .justify-content-end').length
+    if ($('.msg_card_body').scrollTop() == 0) {
+      $('.load-bar').show();
+      $.ajax({
+        url: '/messages/change_chat',
+        type: 'get',
+        dataType: 'json',
+        data: {
+          sender_id: <%= current_user&.id %>,
+          recipient_id: $('#recipientID').val(),
+          temp_message: (temp_message + 10)
+        }
+      });
+    }
+});
 </script>
