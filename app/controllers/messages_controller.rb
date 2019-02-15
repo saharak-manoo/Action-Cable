@@ -13,9 +13,9 @@ class MessagesController < ApplicationController
                       time: "#{Time.now.strftime("%H:%M")}, Today",
                       typing: params[:typing],
                       photo: params[:photo],
-                      sender_id: params[:sender_id],
-                      recipient_id: params[:recipient_id],
-                      current_user: current_user&.id.to_s
+                      sender_id: params[:sender_id].to_i,
+                      recipient_id: params[:recipient_id].to_i,
+                      current_user: current_user&.id.to_i
     else
       create_message
     end
@@ -30,12 +30,12 @@ class MessagesController < ApplicationController
                       time: "#{message&.created_at&.strftime("%H:%M")}, Today",
                       typing: params[:typing],
                       photo: params[:photo],
-                      sender_id: params[:sender_id],
-                      recipient_id: params[:recipient_id],
-                      current_user: current_user&.id.to_s,
+                      sender_id: params[:sender_id].to_i,
+                      recipient_id: params[:recipient_id].to_i,
+                      current_user: current_user&.id.to_i,
                       messages_count: Message.where(room_id: chat_room&.room_id).count
     end
-    if params[:temp_message].to_i >= 4
+    if params[:temp_message].to_i >= 15
       change_chat
     end
   end
@@ -46,7 +46,7 @@ class MessagesController < ApplicationController
     ActionCable.server.broadcast 'reload_messages_channel',
                                   messages: chat_datas(messages),
                                   sender_id: params[:sender_id].to_i,
-                                  recipient_id: params[:recipient_id],
+                                  recipient_id: params[:recipient_id].to_i,
                                   chat_with: chat_with(params[:recipient_id]),
                                   messages_count: Message.where(room_id: chat_room&.room_id).count
   end

@@ -25,12 +25,12 @@
         <div class="card-header msg_head">
           <div class="d-flex bd-highlight">
             <div class="img_cont">
-              <img src="<%= @recipient&.photo %>" class="rounded-circle user_img" id="chatWithPhoto-<%= current_user&.id %>">
+              <img src="<%= @recipient&.photo %>" class="rounded-circle user_img photo-with-chat chatWithPhoto-<%= current_user&.id %>and-<%= @recipient&.id %>">
               <span class="online_icon"></span>
             </div>
             <div class="user_info">
-              <span id="chatWithName-<%= current_user&.id %>">Chat with <%= @recipient&.full_name %></span>
-              <p id="messagesCount-<%= current_user&.id %>"><%= @messages_total&.count%> Messages</p>
+              <span class="name chatWithName-<%= current_user&.id %>and-<%= @recipient&.id %>">Chat with <%= @recipient&.full_name %></span>
+              <p class="count messagesCount-<%= current_user&.id %>and-<%= @recipient&.id %>"><%= @messages_total&.count%> Messages</p>
             </div>
             <div class="video_cam">
               <span><i class="fas fa-video"></i></span>
@@ -47,7 +47,7 @@
             </ul>
           </div>
         </div>
-        <div class="card-body msg_card_body chat-room-<%= current_user&.id %>">
+        <div class="card-body msg_card_body chat-room-<%= current_user&.id %>and-<%= @recipient&.id %>">
           <%= render 'messages/messages' %>
         </div>
         <div class="card-footer">
@@ -68,8 +68,7 @@
 
 <script>
 
-  let temp_message = 0;
-  $('.chat-room-'+ <%= current_user&.id %>).animate({ scrollTop: $(document).height() }, 'slow');
+  $('.chat-room-<%= current_user&.id %>and-<%= @recipient&.id %>').animate({ scrollTop: $(document).height() }, 'slow');
   $('#send').click(function() {
     sendMsg();
   });
@@ -83,7 +82,8 @@
   }
 
   function sendMsg() {
-    temp_message += 1;
+    let temp_message = $('.chat-room-<%= current_user&.id %> .justify-content-start').length
+    temp_message += $('.chat-room-<%= current_user&.id %> .justify-content-end').length
     if ($('.type_msg').val() != '') {
       $.ajax({
         url: '/messages/chat',
@@ -120,9 +120,21 @@
   });
 
   function showChat(id, recipientID) {
-    $('#recipientID').val(recipientID)
+    let recipient = '<%= current_user&.id %>and-'+ $('#recipientID').val()
+    let sender = '<%= current_user&.id %>and-'+ recipientID
+    $('.photo-with-chat').removeClass('chatWithPhoto-'+ recipient);
+    $('.photo-with-chat').addClass('chatWithPhoto-'+ sender);
+    $('.name').removeClass('chatWithName-'+ recipient);
+    $('.name').addClass('chatWithName-'+ sender);
+    $('.count').removeClass('messagesCount-'+ recipient);
+    $('.count').addClass('messagesCount-'+ sender);
+    $('.msg_card_body').removeClass('chat-room-'+ recipient);
+    $('.msg_card_body').addClass('chat-room-'+ sender);
+    $('.showMessages').removeClass('messages-'+ recipient);
+    $('.showMessages').addClass('messages-'+ sender);
     $('.contact').removeClass('active');
     $('#'+ id).addClass('active');
+    $('#recipientID').val(recipientID)
     $.ajax({
       url: '/messages/change_chat',
       type: 'get',

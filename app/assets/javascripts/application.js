@@ -35,16 +35,52 @@ function hideTypeing() {
   setTimeout(function(){ $('#typeMessages').hide(); }, 600);
 }
 
-function renderChat(data) {
+function renderChat(data, reverse) {
   html = '';
   temp_message = 0;
   $.each(data.messages, function (index) {
     if (data.messages[index].recipient_id == data.sender_id) {
-      html += messagesForm(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      if (reverse == true) {
+        html += messagesForm(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      } else {
+        html += messagesTO(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      }
     } else {
-      html += messagesTO(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      if (reverse == true) {
+        html += messagesTO(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      } else {
+        html += messagesForm(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
+      }
     }
   })
-  html += '<div id="messages-'+ data.sender_id +'"></div><div id="typeMessages"></div>'
+  if (reverse == true) {
+    html += '<div class="showMessages messages-'+ data.sender_id +'and-'+ data.recipient_id +'"></div><div id="typeMessages"></div>'
+  } else {
+    html += '<div class="showMessages messages-'+ data.recipient_id +'and-'+ data.sender_id +'"></div><div id="typeMessages"></div>'
+  }
+
   return html;
+}
+
+function pushMessage(data) {
+  let recipient = data.recipient_id +'and-'+ data.sender_id
+  let sender = data.sender_id +'and-'+ data.recipient_id
+  $('#messagesCount-'+ sender).html(data.messages_count + '  Messages');
+  $('#messagesCount-'+ recipient).html(data.messages_count + '  Messages');
+  $('.messages-'+ recipient).append(messagesForm(data.message, data.time, data.photo));
+  $('.messages-'+ sender).append(messagesTO(data.message, data.time, data.photo));
+  $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');
+  $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
+}
+
+function renderChats(data) {
+  let recipient = data.recipient_id +'and-'+ data.sender_id
+  let sender = data.sender_id +'and-'+ data.recipient_id
+  $('.chatWithPhoto-'+ sender).attr('src', data.chat_with.photo);
+  $('.chatWithName-'+ sender).html('Chat with '+ data.chat_with.full_name);
+  $('.messagesCount-'+ sender).html(data.messages_count + '  Messages');
+  $('.chat-room-'+ sender).html(renderChat(data, true));
+  $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
+  $('.chat-room-'+ recipient).html(renderChat(data, false));
+  $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');
 }
