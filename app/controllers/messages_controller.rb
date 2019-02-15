@@ -39,7 +39,8 @@ class MessagesController < ApplicationController
                       sender_id: params[:sender_id].to_i,
                       recipient_id: params[:recipient_id].to_i,
                       current_user: current_user&.id.to_i,
-                      messages_count: Message.where(room_id: room_id).count
+                      messages_count: Message.where(room_id: room_id).count,
+                      contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
     end
 
     change_chat if params[:temp_message].to_i >= 14
@@ -61,7 +62,8 @@ class MessagesController < ApplicationController
                                   sender_id: params[:sender_id].to_i,
                                   recipient_id: params[:recipient_id].to_i,
                                   chat_with: chat_with(params[:recipient_id]),
-                                  messages_count: Message.where(room_id: chat_room&.room_id).count
+                                  messages_count: Message.where(room_id: chat_room&.room_id).count,
+                                  contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
   end
 
   def chat_datas(messages)
@@ -98,6 +100,45 @@ class MessagesController < ApplicationController
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
     @messages_total = Message.where(room_id: @chat_room&.room_id)
     @messages = Message.where(room_id: @chat_room&.room_id).order(created_at: :desc).limit(10)
+  end
+
+  def search
+    users = User.where.not(id: current_user&.id)
+    search = params[:search]
+
+    if search.present?
+      params_split = search.split(' ').compact
+      first_query = (params_split.count > 1 ? params_split[0...-1] : params_split).join(' ')
+      last_query = params_split.last
+      users = users.where("first_name LIKE :search or
+                          last_name LIKE :search or
+                          (first_name LIKE :first_query and
+                          last_name LIKE :last_query)",
+                          first_query: "%#{first_query}%",
+                          last_query: "%#{last_query}%",
+                          search: "%#{params[:search]}%")
+    end
+
+    users = contacts_list(users.joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
+
+    ActionCable.server.broadcast 'reload_messages_channel',
+                                  contacts_list: users,
+                                  sender_id: params[:sender_id].to_i,
+                                  recipient_id: params[:recipient_id].to_i,
+                                  search: true
+  end
+
+  def contacts_list(users)
+    datas = []
+    users.each do |user|
+      datas << {
+        id: user&.id,
+        full_name: user&.full_name,
+        photo: user&.photo
+      }
+    end
+
+    return datas
   end
 
   def message_params

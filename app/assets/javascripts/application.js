@@ -37,7 +37,6 @@ function hideTypeing() {
 
 function renderChat(data, reverse) {
   html = '';
-  temp_message = 0;
   $.each(data.messages, function (index) {
     if (data.messages[index].recipient_id == data.sender_id) {
       if (reverse == true) {
@@ -83,4 +82,27 @@ function renderChats(data) {
   $('.chat-room-'+ sender).animate({ scrollTop: $(document).height() }, 'slow');
   $('.chat-room-'+ recipient).html(renderChat(data, false));
   $('.chat-room-'+ recipient).animate({ scrollTop: $(document).height() }, 'slow');
+}
+
+function renderContactsList(data) {
+  html = '';
+  $.each(data.contacts_list, function (index) {
+    active = (data.contacts_list[index].id == data.recipient_id ? "active" : "");
+    userIndex = "'user-"+ index +"'";
+    contactsList = "'"+ data.contacts_list[index].id +"'"
+    html += '<li class="contact '+ active +'" id="user-'+ index +'">'+
+              '<div class="d-flex bd-highlight" onclick="showChat('+ userIndex +', '+ contactsList +')">'+
+                '<div class="img_cont">'+
+                  '<img src="'+ data.contacts_list[index].photo +'" class="rounded-circle user_img">'+
+                  '<span class="online_icon"></span>'+
+                '</div>'+
+                '<div class="user_info">'+
+                  '<span>'+ data.contacts_list[index].full_name +'</span>'+
+                  '<p>'+ data.contacts_list[index].full_name +' is online</p>'+
+                '</div>'+
+              '</div>'+
+            '</li>'
+  })
+
+  return html;
 }

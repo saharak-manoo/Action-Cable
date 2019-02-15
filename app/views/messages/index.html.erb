@@ -4,7 +4,7 @@
     <div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
       <div class="card-header">
         <div class="input-group">
-          <input type="text" placeholder="Search..." name="" class="form-control search">
+          <input type="text" placeholder="Search..." class="form-control search search-<%= current_user&.id %>" id="searchContacts">
           <div class="input-group-prepend">
             <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
           </div>
@@ -143,4 +143,18 @@
       }
     });
   }
+
+  $('#searchContacts').keyup(function () {
+    search = $('.search-<%= current_user&.id %>').val();
+    $.ajax({
+      url: '/messages/search',
+      type: 'get',
+      dataType: 'json',
+      data: {
+        search: search,
+        sender_id: $('#senderID').val(),
+        recipient_id: $('#recipientID').val()
+      }
+    });
+  });
 </script>

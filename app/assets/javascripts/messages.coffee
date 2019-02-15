@@ -6,6 +6,7 @@ App.room = App.cable.subscriptions.create "WebNotificationsChannel",
     if data.typing == 'false'
       $('#typeMessages').hide();
       pushMessage(data);
+      $('.contacts-'+ data.sender_id).html(renderContactsList(data));
     else
       $('#typeMessages').html(messagesTO(data.message, data.time, data.photo));
       hideTypeing();
