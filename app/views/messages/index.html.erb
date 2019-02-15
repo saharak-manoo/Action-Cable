@@ -12,7 +12,7 @@
       </div>
       <input type="hidden" id="senderID" value="<%= current_user&.id %>">
       <input type="hidden" id="recipientID" value="<%= @recipient&.id %>">
-      <div class="card-body contacts_body">
+      <div class="card-body contacts_body contacts_body-<%= current_user&.id %>">
         <ul class="contacts contacts-<%= current_user&.id %>">
           <%= render 'messages/contacts' %>
         </ul>
@@ -142,6 +142,8 @@
         recipient_id: recipientID
       }
     });
+
+    $('.contacts_body-'+ data.sender_id).animate({ scrollTop: 0 }, 'slow');
   }
 
   $('#searchContacts').keyup(function () {

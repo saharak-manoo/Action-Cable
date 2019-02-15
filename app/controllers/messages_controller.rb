@@ -57,13 +57,17 @@ class MessagesController < ApplicationController
   def change_chat
     chat_room = ChatRoom.find_by(sender_id: params[:sender_id], recipient_id: params[:recipient_id])
     messages = Message.where(room_id: chat_room&.room_id).order(created_at: :desc).limit(10)
+    users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
+    if users.empty?
+      users = User.where.not(id: current_user&.id)
+    end
     ActionCable.server.broadcast 'reload_messages_channel',
                                   messages: chat_datas(messages),
                                   sender_id: params[:sender_id].to_i,
                                   recipient_id: params[:recipient_id].to_i,
                                   chat_with: chat_with(params[:recipient_id]),
                                   messages_count: Message.where(room_id: chat_room&.room_id).count,
-                                  contacts_list: contacts_list(User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
+                                  contacts_list: contacts_list(users)
   end
 
   def chat_datas(messages)
@@ -96,6 +100,9 @@ class MessagesController < ApplicationController
 
   def load_data
     @users = User.where.not(id: current_user&.id).joins(:message_as_recipient).order('messages.created_at desc')&.uniq
+    if @users.empty?
+      @users = User.where.not(id: current_user&.id)
+    end
     @recipient = User.find_by(id: @users&.first&.id)
     @chat_room = ChatRoom.find_by(sender_id: current_user&.id, recipient_id: @recipient&.id)
     @messages_total = Message.where(room_id: @chat_room&.room_id)
@@ -119,7 +126,7 @@ class MessagesController < ApplicationController
                           search: "%#{params[:search]}%")
     end
 
-    users = contacts_list(users.joins(:message_as_recipient).order('messages.created_at desc')&.uniq)
+    users = contacts_list(users)
 
     ActionCable.server.broadcast 'reload_messages_channel',
                                   contacts_list: users,

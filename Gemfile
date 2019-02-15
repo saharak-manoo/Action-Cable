@@ -65,3 +65,4 @@ gem 'awesome_print', :require => 'ap'
 
 gem 'redis', '~> 3.0'
 gem 'devise'
+gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
