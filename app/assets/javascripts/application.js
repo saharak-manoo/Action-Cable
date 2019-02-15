@@ -40,37 +40,11 @@ function renderChat(data) {
   temp_message = 0;
   $.each(data.messages, function (index) {
     if (data.messages[index].recipient_id == data.sender_id) {
-      html += messagesTO(data.messages[index].messages, 'ddddd', data.photo)
+      html += messagesForm(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
     } else {
-      html +=   messagesForm(data.messages[index].messages, 'ddddd', data.photo_you)
+      html += messagesTO(data.messages[index].message, data.messages[index].time, data.messages[index].photo)
     }
   })
   html += '<div id="messages-'+ data.sender_id +'"></div><div id="typeMessages"></div>'
   return html;
-//   <% @messages.each do |message| %>
-//   <% date_to_day = message&.created_at.strftime('%d').to_i >= DateTime.now.strftime('%d').to_i %>
-//   <% if message.recipient_id == current_user&.id %>
-//     <div class="d-flex justify-content-start mb-4">
-//       <div class="img_cont_msg">
-//         <img src="<%= @photo %>" class="rounded-circle user_img_msg">
-//       </div>
-//       <div class="msg_cotainer">
-//         <%= message&.messages %>
-//         <span class="msg_time"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
-//       </div>
-//     </div>
-//   <% else %>
-//     <div class="d-flex justify-content-end mb-4">
-//       <div class="msg_cotainer_send">
-//         <%= message&.messages %>
-//         <span class="msg_time_send"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
-//       </div>
-//       <div class="img_cont_msg">
-//       <img src="<%= @photo_you %>" class="rounded-circle user_img_msg">
-//       </div>
-//     </div>
-//   <% end %>
-// <% end %>
-
-
 }

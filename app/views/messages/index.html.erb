@@ -25,12 +25,12 @@
         <div class="card-header msg_head">
           <div class="d-flex bd-highlight">
             <div class="img_cont">
-              <img src="<%= @recipient&.photo %>" class="rounded-circle user_img">
+              <img src="<%= @recipient&.photo %>" class="rounded-circle user_img" id="chatWithPhoto-<%= current_user&.id %>">
               <span class="online_icon"></span>
             </div>
             <div class="user_info">
-              <span>Chat with <%= @recipient&.full_name %></span>
-              <p id="messagesCount-<%= current_user&.id %>And-<%= @recipient&.id %>"><%= @messages.count %> Messages</p>
+              <span id="chatWithName-<%= current_user&.id %>">Chat with <%= @recipient&.full_name %></span>
+              <p id="messagesCount-<%= current_user&.id %>"><%= @messages.count %> Messages</p>
             </div>
             <div class="video_cam">
               <span><i class="fas fa-video"></i></span>
@@ -128,8 +128,8 @@
       type: 'get',
       dataType: 'json',
       data: {
-        recipient_id: recipientID,
-        sender_id: <%= current_user&.id %>
+        sender_id: <%= current_user&.id %>,
+        recipient_id: recipientID
       }
     });
   }
