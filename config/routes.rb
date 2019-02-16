@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   get 'messages/index'
   root 'homes#index'
 
+  resources :homes
+
   resources :messages do
     collection do
       get 'chat'

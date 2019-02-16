@@ -4,5 +4,6 @@
 App.room = App.cable.subscriptions.create "WebNotificationsChannel",
   received: (data) ->
       pushMessage(data);
+      showNotification(data);
       $('.contacts-'+ data.sender_id).html(renderContactsList(data));
       $('.contacts_body-'+ data.sender_id).animate({ scrollTop: 0 }, 'slow');

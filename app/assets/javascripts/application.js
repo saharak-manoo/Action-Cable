@@ -131,3 +131,25 @@ function reloadStatusNotSessions(data) {
     $('.onlineText-'+ data.new_sessions[index].id).text(data.new_sessions[index].offline_time);
   });
 }
+
+function showNotification(data) {
+  $('.noti-to-'+ data.recipient_id).html(renderNotification(data));
+  setTimeout(function(){ $('.Message').hide(); }, 2000);
+}
+
+function renderNotification(data) {
+  html = '<ul class="noti">'+
+            '<li class="noti">'+
+              '<div class="Message Message-light">'+
+                '<div class="Message-icon">'+
+                  '<img src="'+ data.photo +'" class="rounded-circle user_img_msg_noti">'+
+                '</div>'+
+                '<div class="Message-body">'+
+                  '<p>'+ data.message +'</p>'+
+                '</div>'+
+              '</div>'+
+            '</li>'+
+          '</ul>'
+
+  return html;
+}
