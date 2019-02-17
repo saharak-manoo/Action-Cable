@@ -104,7 +104,7 @@ body, html{
   margin-bottom: auto;
 }
 .create-post{
-  height: 150px;
+  height: 130px;
   border-radius: 25px !important;
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
@@ -146,6 +146,14 @@ body, html{
 .search:focus{
   box-shadow:none !important;
   outline:0px !important;
+}
+.type_new_feed{
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 25px !important;
+  border: 1 !important;
+  color:white !important;
+  height: 80px !important;
+  overflow-y: auto;
 }
 .type_msg{
   background-color: rgba(0,0,0,0.3) !important;
@@ -260,6 +268,16 @@ color: white;
 font-size: 20px;
 cursor: pointer;
 margin-right: 20px;
+}
+.new_post{
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 200px;
+  border-radius: 35px;
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 45px;
+  position: relative;
+  word-break: break-all;
 }
 .msg_cotainer{
 margin-top: auto;

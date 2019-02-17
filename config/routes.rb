@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   get 'messages/index'
   root 'homes#index'
 
-  resources :homes
+  resources :homes do
+    collection do
+      get 'new_feed'
+    end
+  end
 
   resources :messages do
     collection do

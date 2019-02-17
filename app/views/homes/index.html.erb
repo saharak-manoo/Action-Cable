@@ -3,13 +3,15 @@
     <div class="col-md-2 col-xl-8 feed">
       <div class="create-post mb-sm-2 mb-md-2 contacts_card">
         <div class="card-body msg_card_body">
-            <div class="d-flex justify-content-start mb-4">
+            <div class="d-flex justify-content-start mb-12">
               <div class="img_cont_msg_new_feed">
                 <img src="<%= current_user&.photo %>" class="rounded-circle user_img_new_feed">
               </div>
-              <div class="msg_cotainer">
-                Hi, how are you samim?
-                <span class="msg_time">8:40 AM, Today</span>
+              <div class="col-md-2 col-xl-9">
+                <textarea onkeyup="return enablePost()" class="form-control type_new_feed" placeholder="Type your message..."></textarea>
+              </div>
+              <div class="col-md-2 col-xl-2"><br>
+                <button class="btn btn-outline-primary my-2 btn-lg my-sm-0 post-status" disabled>Post</button>
               </div>
             </div>
         </div>
@@ -22,9 +24,8 @@
               <div class="img_cont_msg_new_feed">
                 <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
               </div>
-              <div class="msg_cotainer">
+              <div class="new_post">
                 Hi, how are you samim?
-                <span class="msg_time">8:40 AM, Today</span>
               </div>
             </div>
         </div>
@@ -32,3 +33,35 @@
     </div>
   </div>
 </div>
+
+<script>
+
+  function enablePost() {
+    if ($('.type_new_feed').val() == '') {
+      $('.post-status').prop('disabled', true);
+      return true;
+    } else {
+      $('.post-status').prop('disabled', false);
+      return false;
+    }
+  }
+  $('.post-status').click(function() {
+    postNewFeed();
+  });
+
+  function postNewFeed() {
+    if ($('.type_new_feed').val() != '') {
+      $.ajax({
+        url: '/homes/new_feed',
+        type: 'get',
+        dataType: 'js',
+        data: {
+          messages: $('.type_new_feed').val(),
+          photo: "<%= current_user&.photo %>",
+          user_id_id: $('#senderID').val()
+        }
+      });
+    }
+    $('.type_msg').val('');
+  }
+</script>
