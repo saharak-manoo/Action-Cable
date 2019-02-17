@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       get 'new_feed'
       get 'comment'
       get 'more_post'
+      get 'more_comment'
     end
   end
 

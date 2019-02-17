@@ -11,19 +11,21 @@
       </div>
     </div>
     <!-- show comments -->
-    <% @comments.each do |comment| %>
-      <% if post[:id] == comment[:post_id] %>
-        <div class="d-flex justify-content-start mb-3 offset-2">
-          <div class="col-xl-2 img_cont_msg_cooment">
-            <img src="<%= comment[:photo] %>" class="rounded-circle user_img_comment">
+    <div class="show-comment-head-<%= post[:id] %>">
+      <% @comments.each_with_index do |comment, index| %>
+        <% if (post[:id] == comment[:post_id]) %>
+          <div class="d-flex justify-content-start mb-3 offset-2 show-comment-<%= post[:id] %>">
+            <div class="col-xl-2 img_cont_msg_cooment">
+              <img src="<%= comment[:photo] %>" class="rounded-circle user_img_comment">
+            </div>
+            <div class="col-xl-10 comment_post">
+              <%= comment[:full_name] %> : <%= comment[:content] %>
+              <span class="msg_time_send"><%= comment[:time] %></span>
+            </div>
           </div>
-          <div class="col-xl-10 comment_post">
-            <%= comment[:full_name] %> : <%= comment[:content] %>
-            <span class="msg_time_send"><%= comment[:time] %></span>
-          </div>
-        </div>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
     <div class="d-flex justify-content-start offset-2">
       <div class="col-xl-8 offset-2">
         <input onkeyup="return enablePostComment(<%= post[:id] %>)" class="input-comment id-<%= post[:id] %>" type="text" placeholder="Comments...">

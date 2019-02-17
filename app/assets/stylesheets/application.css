@@ -615,6 +615,11 @@ iframe {
   padding: 10px;
 }
 
+.center-more {
+  width: 30% !important;
+  padding: 5px !important;
+}
+
 
 .wrap-input100 {
   position: relative;

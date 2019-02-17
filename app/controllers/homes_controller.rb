@@ -59,8 +59,13 @@ class HomesController < ApplicationController
     load_data
   end
 
+  def more_comment
+    load_data
+  end
+
   def load_data
     @post_max = Post.all.count
+    @post_ids = Comment.pluck(:post_id).uniq
     @posts = posts(params[:more_post].present? ? params[:more_post] : 10)
     @comments = comments
     broadcast_feed_now(render_to_string(partial: 'feeds'))

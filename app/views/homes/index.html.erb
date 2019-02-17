@@ -29,7 +29,6 @@
 
 <script>
 
-  post = $('.show-post').length;
   function enablePost() {
     if ($('.type_new_feed').val() == '') {
       $('.post-status').prop('disabled', true);
@@ -53,7 +52,7 @@
         data: {
           content: $('.type_new_feed').val(),
           user_id: <%= current_user&.id %>,
-          more_post: post
+          more_post: $('.show-post').length
         }
       });
     }
@@ -78,12 +77,12 @@
       $.ajax({
         url: '/homes/comment',
         type: 'get',
-        dataType: 'js',
+        dataType: 'json',
         data: {
           content: $('.id-'+ id).val(),
           user_id: <%= current_user&.id %>,
           post_id: id,
-          more_post: post
+          more_post: $('.show-post').length
         }
       });
     }
@@ -92,6 +91,7 @@
 
   $(window).scroll(function() {
     postMax = <%= @post_max %>
+    post = $('.show-post').length;
     max_page = $(document).height() - $(window).height()
     sessionStorage.scrollTop = $(this).scrollTop();
     if (postMax != post) {
@@ -126,4 +126,19 @@
       $('.last-post').show();
     }
   });
+
+  function moreComment(postID) {
+    $.ajax({
+      url: '/homes/more_comment',
+      type: 'get',
+      dataType: 'json',
+      data: {
+        post_id: postID,
+        more_comment: true
+      },success: function (status) {
+        setTimeout(function(){ $('.more-id-'+ postID).hide(); }, 500);
+      }
+    });
+  }
+
 </script>
