@@ -109,7 +109,7 @@ body, html{
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
 .feed_card{
-  height: 800px;
+  height: auto;
   border-radius: 25px !important;
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
@@ -124,7 +124,7 @@ body, html{
   white-space: nowrap;
 }
 .msg_card_body{
-  overflow-y: auto;
+  overflow-y: auto !important;
 }
 .card-header{
   border-radius: 15px 15px 0 0 !important;
@@ -200,49 +200,49 @@ body, html{
   background-color: rgba(0,0,0,0.3);
 }
 .user_img{
-  height: 70px;
-  width: 70px;
-  border:1.5px solid #f5f6fa;
+  height: 70px !important;
+  width: 70px !important;
+  border:1.5px solid #f5f6fa !important;
 
 }
 .user_img_comment{
-  height: 40px;
-  width: 40px;
-  border: 1.5px solid #f5f6fa;
+  height: 40px !important;
+  width: 40px !important;
+  border: 1.5px solid #f5f6fa !important;
 }
 .user_img_new_feed{
-  height: 90px;
-  width: 90px;
-  border: 1.5px solid #f5f6fa;
+  height: 90px !important;
+  width: 90px !important;
+  border: 1.5px solid #f5f6fa !important;
 }
 .user_img_msg{
-  height: 40px;
-  width: 40px;
-  border: 1.5px solid #f5f6fa;
+  height: 40px !important;
+  width: 40px !important;
+  border: 1.5px solid #f5f6fa !important;
 }
 .user_img_msg_noti{
-  height: 60px;
-  width: 60px;
-  border:1.5px solid #f5f6fa;
+  height: 60px !important;
+  width: 60px !important;
+  border:1.5px solid #f5f6fa !important;
 }
 .img_cont{
-  position: relative;
-  height: 70px;
-  width: 70px;
+  position: relative !important;
+  height: 70px !important;
+  width: 70px !important;
 }
 .img_cont_msg_cooment{
-  bottom: -0.3em;
-  height: 40px;
-  width: 40px;
-  right: -3em;
+  bottom: -0.3em !important;
+  height: 40px !important;
+  width: 40px !important;
+  right: -3em !important;
 }
 .img_cont_msg_new_feed{
-  height: 90px;
-  width: 90px;
+  height: 90px !important;
+  width: 90px !important;
 }
 .img_cont_msg{
-  height: 40px;
-  width: 40px;
+  height: 40px !important;
+  width: 40px !important;
 }
 .online_icon{
   position: absolute;
@@ -281,56 +281,56 @@ cursor: pointer;
 margin-right: 20px;
 }
 .comment_post{
-  margin-top: auto;
-  margin-bottom: auto;
-  border-radius: 35px;
-  background-color: rgba(255, 255, 255, 0.4);
-  padding: 15px;
-  position: relative;
-  word-break: break-all;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  border-radius: 35px !important;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  padding: 10px !important;
+  position: relative !important;
+  word-break: break-all !important;
 }
 .new_post{
-  margin-top: auto;
-  margin-bottom: auto;
-  border-radius: 35px;
-  background-color: rgba(255, 255, 255, 0.4);
-  padding: 35px;
-  position: relative;
-  word-break: break-all;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  border-radius: 35px !important;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  padding: 35px !important;
+  position: relative !important;
+  word-break: break-all !important;
 }
 .msg_cotainer{
-margin-top: auto;
-margin-bottom: auto;
-margin-left: 10px;
-border-radius: 25px;
-background-color: #82ccdd;
-padding: 10px;
-position: relative;
-word-break: break-all;
+  margin-top: 10px  !important;
+  margin-bottom: 10px  !important;
+  margin-left: 10px !important;
+  border-radius: 25px !important;
+  background-color: #82ccdd !important;
+  padding: 10px !important;
+  position: relative !important;
+  word-break: break-all !important;
 }
 .msg_cotainer_send{
-margin-top: auto;
-margin-bottom: auto;
-margin-right: 15px;
-border-radius: 25px;
-background-color: #78e08f;
-padding: 10px;
-position: relative;
-word-break: break-all;
+margin-top: 10px  !important;
+margin-bottom: 10px  !important;
+margin-right: 15px !important;
+border-radius: 25px !important;
+background-color: #78e08f !important;
+padding: 10px !important;
+position: relative !important;
+word-break: break-all !important;
 }
 .msg_time{
-position: absolute;
-left: 0;
-bottom: -15px;
-color: rgba(255,255,255,0.5);
-font-size: 10px;
+  position: absolute !important;
+  left: 0 !important;
+  bottom: -15px !important;
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 10px !important;
 }
 .msg_time_send{
-position: absolute;
-right: 0;
-bottom: -15px;
-color: rgba(255,255,255,0.5);
-font-size: 10px;
+  position: absolute !important;
+  right: 0 !important;
+  bottom: -15px !important;
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 10px !important;
 }
 .msg_head{
 position: relative;

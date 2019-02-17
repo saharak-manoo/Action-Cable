@@ -46,11 +46,7 @@
           </div>
         </div>
         <div class="card-body msg_card_body chat-room-<%= current_user&.id %>and-<%= @recipient&.id %>">
-          <div class="load-bar hide">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
+          <%= render 'layouts/loading' %>
           <br>
           <%= render 'messages/messages' %>
         </div>

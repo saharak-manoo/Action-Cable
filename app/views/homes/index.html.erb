@@ -1,86 +1,35 @@
 <div class="container-fluid h-100">
   <div class="row justify-content-center h-100">
-    <div class="col-md-2 col-xl-8 feed">
-      <div class="create-post mb-sm-2 mb-md-2 contacts_card">
+    <div class="col-xl-8 feed">
+      <div class="create-post mb-md-2 contacts_card">
         <div class="card-body msg_card_body">
             <div class="d-flex justify-content-start mb-12">
               <div class="img_cont_msg_new_feed">
                 <img src="<%= current_user&.photo %>" class="rounded-circle user_img_new_feed">
               </div>
-              <div class="col-md-2 col-xl-9">
+              <div class="col-xl-9">
                 <textarea onkeyup="return enablePost()" class="form-control type_new_feed" placeholder="Type your message..."></textarea>
               </div>
-              <div class="col-md-2 col-xl-2"><br>
-                <button class="btn btn-outline-primary my-2 btn-lg my-sm-0 post-status" disabled>Post</button>
+              <div class="col-xl-2"><br>
+                <button class="btn btn-outline-primary my-2 btn-lg my-sm-0 post-status btn-block" disabled>Post</button>
               </div>
             </div>
         </div>
       </div>
     </div>
     <input type="hidden" class="post-id">
-    <div class="col-md-2 col-xl-8 feed">
-      <div class="feed_card mb-sm-2 mb-md-2 contacts_card">
-        <div class="card-body msg_card_body">
-          <div class="d-flex justify-content-start mb-3">
-            <div class="col-md-2 col-xl-2 img_cont_msg_new_feed">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
-            </div>
-            <div class="col-md-2 col-xl-10 new_post">
-              Hi, how are you samim?
-              <span class="msg_time_send">8:40 AM, Today</span>
-            </div>
-          </div>
-          <!-- show comments -->
-          <div class="d-flex justify-content-start mb-3 offset-2">
-            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
-            </div>
-            <div class="col-md-2 col-xl-10 comment_post">
-              Hi
-              <span class="msg_time_send">8:40 AM, Today</span>
-            </div>
-          </div>
-          <div class="d-flex justify-content-start offset-2">
-            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
-            </div>
-            <div class="col-md-2 col-xl-9">
-              <input onkeyup="return enablePostComment('1')" class="input-comment id-1" type="text" placeholder="Comments...">
-            </div>
-            <div class="col-md-2 col-xl-1">
-              <button class="btn btn-outline-primary my-sm-2 post-comment-1" disabled>Post</button>
-            </div>
-          </div>
-        </div>
-        <div class="card-body msg_card_body">
-          <div class="d-flex justify-content-start mb-4">
-            <div class="col-md-2 col-xl-2 img_cont_msg_new_feed">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
-            </div>
-            <div class="col-md-2 col-xl-10 new_post">
-              Hi, how are you samim?
-              <span class="msg_time_send">8:40 AM, Today</span>
-            </div>
-          </div>
-          <div class="d-flex justify-content-start offset-2">
-            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
-              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
-            </div>
-            <div class="col-md-2 col-xl-9">
-              <input onkeyup="return enablePostComment('2')" class="input-comment id-2" type="text" placeholder="Comments...">
-            </div>
-            <div class="col-md-2 col-xl-1">
-              <button class="btn btn-outline-primary my-sm-2 post-comment-2" disabled>Post</button>
-            </div>
-          </div>
-        </div>
+    <div class="col-xl-8 feed">
+      <div class="feed_card contacts_card render-feed">
+        <%= render 'homes/feeds' %>
       </div>
     </div>
+    <%= render 'layouts/loading' %>
   </div>
 </div>
 
 <script>
 
+  post = $('.show-post').length;
   function enablePost() {
     if ($('.type_new_feed').val() == '') {
       $('.post-status').prop('disabled', true);
@@ -102,8 +51,9 @@
         type: 'get',
         dataType: 'js',
         data: {
-          messages: $('.type_new_feed').val(),
-          user_id: <%= current_user&.id %>
+          content: $('.type_new_feed').val(),
+          user_id: <%= current_user&.id %>,
+          more_post: post
         }
       });
     }
@@ -122,24 +72,58 @@
     }
   }
 
-  $('.post-comment').click(function() {
-    postComment();
-  });
-
   function postComment() {
-    let id = $('.post-id').val();
+    id = $('.post-id').val();
     if ($('.id-'+ id).val() != '') {
       $.ajax({
         url: '/homes/comment',
         type: 'get',
         dataType: 'js',
         data: {
-          messages: $('.id-'+ id).val(),
+          content: $('.id-'+ id).val(),
           user_id: <%= current_user&.id %>,
-          post_id: id
+          post_id: id,
+          more_post: post
         }
       });
     }
     $('.id-'+ id).val('');
   }
+
+  $(window).scroll(function() {
+    postMax = <%= @post_max %>
+    max_page = $(document).height() - $(window).height()
+    sessionStorage.scrollTop = $(this).scrollTop();
+    if (postMax != post) {
+      if (sessionStorage.scrollTop == 0 && post != 10) {
+        $('.load-bar').show();
+        $.ajax({
+          url: '/homes/more_post',
+          type: 'get',
+          dataType: 'json',
+          data: {
+            user_id: <%= current_user&.id %>,
+            more_post: 10
+          },success: function (status) {
+            $('.load-bar').hide();
+          }
+        });
+      } else if (sessionStorage.scrollTop == max_page) {
+        $('.load-bar').show();
+        $.ajax({
+          url: '/homes/more_post',
+          type: 'get',
+          dataType: 'json',
+          data: {
+            user_id: <%= current_user&.id %>,
+            more_post: post + 10
+          },success: function (status) {
+            $('.load-bar').hide();
+          }
+        });
+      }
+    } else {
+      $('.last-post').show();
+    }
+  });
 </script>
