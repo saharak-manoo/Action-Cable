@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_14_165731) do
+ActiveRecord::Schema.define(version: 2019_02_17_031229) do
 
   create_table "chat_rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -18,8 +18,10 @@ ActiveRecord::Schema.define(version: 2019_02_14_165731) do
     t.integer "room_id"
     t.integer "sender_id"
     t.integer "recipient_id"
+    t.integer "user_id"
     t.index ["recipient_id"], name: "index_chat_rooms_on_recipient_id"
     t.index ["sender_id"], name: "index_chat_rooms_on_sender_id"
+    t.index ["user_id"], name: "index_chat_rooms_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -32,6 +34,12 @@ ActiveRecord::Schema.define(version: 2019_02_14_165731) do
     t.index ["recipient_id"], name: "index_messages_on_recipient_id"
     t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "content"
   end
 
   create_table "users", force: :cascade do |t|
