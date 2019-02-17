@@ -32,7 +32,7 @@ function messagesForm(message, time, photo) {
 }
 
 function renderChat(data, reverse) {
-  html = '<div class="load-bar hide"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><br>';
+  html = '<div class="load-bar more-messages hide"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><br>';
   $.each(data.messages, function (index) {
     if (data.messages[index].recipient_id == data.sender_id) {
       if (reverse == true) {
