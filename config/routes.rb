@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :homes do
     collection do
       get 'new_feed'
+      get 'comment'
     end
   end
 

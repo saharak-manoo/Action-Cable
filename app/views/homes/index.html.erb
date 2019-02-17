@@ -17,17 +17,62 @@
         </div>
       </div>
     </div>
+    <input type="hidden" class="post-id">
     <div class="col-md-2 col-xl-8 feed">
       <div class="feed_card mb-sm-2 mb-md-2 contacts_card">
         <div class="card-body msg_card_body">
-            <div class="d-flex justify-content-start mb-4">
-              <div class="img_cont_msg_new_feed">
-                <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
-              </div>
-              <div class="new_post">
-                Hi, how are you samim?
-              </div>
+          <div class="d-flex justify-content-start mb-3">
+            <div class="col-md-2 col-xl-2 img_cont_msg_new_feed">
+              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
             </div>
+            <div class="col-md-2 col-xl-10 new_post">
+              Hi, how are you samim?
+              <span class="msg_time_send">8:40 AM, Today</span>
+            </div>
+          </div>
+          <!-- show comments -->
+          <div class="d-flex justify-content-start mb-3 offset-2">
+            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
+              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
+            </div>
+            <div class="col-md-2 col-xl-10 comment_post">
+              Hi
+              <span class="msg_time_send">8:40 AM, Today</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start offset-2">
+            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
+              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
+            </div>
+            <div class="col-md-2 col-xl-9">
+              <input onkeyup="return enablePostComment('1')" class="input-comment id-1" type="text" placeholder="Comments...">
+            </div>
+            <div class="col-md-2 col-xl-1">
+              <button class="btn btn-outline-primary my-sm-2 post-comment-1" disabled>Post</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body msg_card_body">
+          <div class="d-flex justify-content-start mb-4">
+            <div class="col-md-2 col-xl-2 img_cont_msg_new_feed">
+              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_new_feed">
+            </div>
+            <div class="col-md-2 col-xl-10 new_post">
+              Hi, how are you samim?
+              <span class="msg_time_send">8:40 AM, Today</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start offset-2">
+            <div class="col-md-2 col-xl-2 img_cont_msg_cooment">
+              <img src="https://devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg" class="rounded-circle user_img_comment">
+            </div>
+            <div class="col-md-2 col-xl-9">
+              <input onkeyup="return enablePostComment('2')" class="input-comment id-2" type="text" placeholder="Comments...">
+            </div>
+            <div class="col-md-2 col-xl-1">
+              <button class="btn btn-outline-primary my-sm-2 post-comment-2" disabled>Post</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -45,6 +90,7 @@
       return false;
     }
   }
+
   $('.post-status').click(function() {
     postNewFeed();
   });
@@ -57,11 +103,43 @@
         dataType: 'js',
         data: {
           messages: $('.type_new_feed').val(),
-          photo: "<%= current_user&.photo %>",
-          user_id_id: $('#senderID').val()
+          user_id: <%= current_user&.id %>
         }
       });
     }
     $('.type_new_feed').val('');
+  }
+
+  function enablePostComment(id) {
+    if ($('.id-'+ id ).val() == '') {
+      $('.post-comment-'+ id).prop('disabled', true);
+      $('.post-id').val('');
+      return true;
+    } else {
+      $('.post-comment-'+ id).prop('disabled', false);
+      $('.post-id').val(id);
+      return false;
+    }
+  }
+
+  $('.post-comment').click(function() {
+    postComment();
+  });
+
+  function postComment() {
+    let id = $('.post-id').val();
+    if ($('.id-'+ id).val() != '') {
+      $.ajax({
+        url: '/homes/comment',
+        type: 'get',
+        dataType: 'js',
+        data: {
+          messages: $('.id-'+ id).val(),
+          user_id: <%= current_user&.id %>,
+          post_id: id
+        }
+      });
+    }
+    $('.id-'+ id).val('');
   }
 </script>

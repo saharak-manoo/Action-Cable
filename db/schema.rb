@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_17_031229) do
+ActiveRecord::Schema.define(version: 2019_02_17_031919) do
 
   create_table "chat_rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -18,10 +18,18 @@ ActiveRecord::Schema.define(version: 2019_02_17_031229) do
     t.integer "room_id"
     t.integer "sender_id"
     t.integer "recipient_id"
-    t.integer "user_id"
     t.index ["recipient_id"], name: "index_chat_rooms_on_recipient_id"
     t.index ["sender_id"], name: "index_chat_rooms_on_sender_id"
-    t.index ["user_id"], name: "index_chat_rooms_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "content"
+    t.integer "user_id"
+    t.integer "post_id"
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -40,6 +48,8 @@ ActiveRecord::Schema.define(version: 2019_02_17_031229) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "content"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

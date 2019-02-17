@@ -9,7 +9,10 @@ class HomesController < ApplicationController
   end
 
   def new_feed
-    ap 'sdadasdasd'
-    ap params
+    ap 'new_feed'
+  end
+
+  def comment
+    ap 'comment'
   end
 end
