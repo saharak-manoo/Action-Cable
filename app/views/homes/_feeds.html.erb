@@ -1,0 +1,39 @@
+<% @posts.each do |post| %>
+  <div class="card-body msg_card_body">
+    <div class="d-flex justify-content-start mb-3 show-post">
+      <div class="col-xl-2 img_cont_msg_new_feed">
+        <img src="<%= post[:photo] %>" class="rounded-circle user_img_new_feed">
+      </div>
+      <div class="col-xl-10 new_post">
+        <h5><%= post[:full_name] %></h5><br>
+        <%= post[:content] %>
+        <span class="msg_time_send"><%= post[:time] %></span>
+      </div>
+    </div>
+    <!-- show comments -->
+    <div class="show-comment-head-<%= post[:id] %>">
+      <% @comments.each_with_index do |comment, index| %>
+        <% if (post[:id] == comment[:post_id]) %>
+          <div class="d-flex justify-content-start mb-3 offset-2 show-comment-<%= post[:id] %>">
+            <div class="col-xl-2 img_cont_msg_cooment">
+              <img src="<%= comment[:photo] %>" class="rounded-circle user_img_comment">
+            </div>
+            <div class="col-xl-10 comment_post">
+              <%= comment[:full_name] %> : <%= comment[:content] %>
+              <span class="msg_time_send"><%= comment[:time] %></span>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="d-flex justify-content-start offset-2">
+      <div class="col-xl-8 offset-2">
+        <input onkeyup="return enablePostComment(<%= post[:id] %>)" class="input-comment id-<%= post[:id] %>" type="text" placeholder="Comments...">
+      </div>
+      <div class="col-xl-2">
+        <button onclick="postComment()" class="btn btn-outline-primary my-sm-2 btn-block post-comment-<%= post[:id] %>" disabled>Post</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+<h3 class="offset-5 last-post hide">ไม่มีโพสที่เก่ากว่านี้แล้ว</h3>

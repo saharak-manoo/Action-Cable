@@ -1,0 +1,36 @@
+<% @messages.sort {|x, y| x[:id] <=> y[:id]}.each do |message| %>
+  <% date_to_day = message&.created_at.strftime('%d').to_i >= DateTime.now.strftime('%d').to_i %>
+  <% if message.recipient_id == current_user&.id %>
+    <div class="d-flex justify-content-start mb-4">
+      <div class="img_cont_msg">
+        <img src="<%= @recipient&.photo %>" class="rounded-circle user_img_msg">
+      </div>
+      <div class="msg_cotainer">
+        <%= message&.messages %>
+        <span class="msg_time"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
+      </div>
+    </div>
+  <% else %>
+    <div class="d-flex justify-content-end mb-4">
+      <div class="msg_cotainer_send">
+        <%= message&.messages %>
+        <span class="msg_time_send"><%= message&.created_at&.strftime("%H:%M") %>, <%= date_to_day ? 'Today' : message&.created_at&.strftime('%d/%m/%Y') %></span>
+      </div>
+      <div class="img_cont_msg">
+      <img src="<%= current_user&.photo %>" class="rounded-circle user_img_msg">
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<div class="showMessages messages-<%= current_user&.id %>and-<%= @recipient&.id %>"></div>
+<div class="type-messages-<%= current_user&.id %> hide">
+  <div class="d-flex justify-content-end mb-4">
+    <div class="msg_cotainer_send">
+      กำลังพิมพ์...
+      <span class="msg_time_send">Now, Today</span>
+    </div>
+    <div class="img_cont_msg">
+      <img src="<%= current_user&.photo %>" class="rounded-circle user_img_msg">
+    </div>
+  </div>
+</div>

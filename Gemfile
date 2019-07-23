@@ -62,3 +62,14 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'awesome_print', :require => 'ap'
+
+gem 'redis', '~> 3.0'
+gem 'devise'
+gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
+gem 'rufus-scheduler'
+gem 'rails_admin', '~> 1.3'
+
+group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
+end
