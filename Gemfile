@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) { |repo| 'https://github.com/#{repo}.git' }
 
-ruby '2.5.1'
+ruby '2.7.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 6.0.2.2'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.3.0'
 # Use Puma as the app server
@@ -48,6 +48,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do
@@ -64,12 +66,15 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'awesome_print', :require => 'ap'
 
 gem 'redis', '~> 3.0'
-gem 'devise'
-gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
-gem 'rufus-scheduler'
-gem 'rails_admin', '~> 1.3'
 
-group :development do
-  gem "better_errors"
-  gem "binding_of_caller"
-end
+# Login, Rigister, Forgot Password, Confirm Email, Reset Password
+gem 'devise'
+
+# Faker Data
+gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
+
+# Scheduler
+gem 'rufus-scheduler'
+
+# Database Admin for ui
+gem 'rails_admin', '~> 2.0'
