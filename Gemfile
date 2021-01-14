@@ -67,7 +67,7 @@ gem 'redis', '~> 3.0'
 gem 'devise'
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'rufus-scheduler'
-gem 'rails_admin', '~> 1.3'
+gem 'rails_admin', '~> 1.4'
 
 group :development do
   gem "better_errors"
